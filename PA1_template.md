@@ -63,11 +63,16 @@ link:
 
 This analysis endeavors to explore the given activity monitoring device data and 
 identify any potential relationships within the data that could be explored 
-further.  This analysis is designed to take the user all the way through the 
+further.  The basic questions we are looking at are:
+
+</blockquote><font size=3>*"What relationships can we identify in this data set 
+between things like number of steps, time of day, time of week, etc?  How do the 
+`NA` values in the "steps" variable affect the data?"*</font></blockquote>
+
+This analysis is designed to take the user all the way through the 
 process, from initial setup to exploratory data analysis, etc.  As such, the 
 entire analysis can be computed by processing this document through `knitr` into 
-an HTML file (other formats have not been tested, but they may work too).
-
+an HTML file (other formats have not been tested, but they may work too). 
 Additionally, the analysis process is described in detail in this R Markdown 
 file so that the code and thought-process are clear at each step.  The analysis 
 begins with basic setup, such as loading packages and data, then progresses into 
@@ -453,7 +458,7 @@ that 8 different days contain `NA` values.  Also, while the means of the days
 are mostly within a similar range, all of the median values are "0".  This may 
 suggest that the subject was more likely to be inactive during any given day 
 than to be moving around, possibly due to things like sleep and work.
-<br>
+<br><br>
 
 ## What is the average daily activity pattern?
 
@@ -470,14 +475,21 @@ meanIntervals <- data %>% filter(!is.na(steps)) %>% group_by(interval) %>% summa
 ggplot(meanIntervals, aes(interval, steps)) + 
     ##geom_point(alpha=0.3, size=2) +
     geom_line(size=0.3) +
-    ggtitle("Total Steps over 5 Second Intervals:  NAs included") +
+    ggtitle("Average Steps over 5 Second Intervals:  NAs included") +
     labs(x="5 Second Intervals of Day") +
     labs(y="Steps ")
 ```
 
 ![](PA1_template_files/figure-html/meanIntervalsPlot-1.png) 
 
-From the plot, we can see that the maximum average steps-per-interval appears to 
+From the plot, we are able to detect a pretty strong trend in the activity 
+patterns of the subject.  There is a marked rest-period in the morning, followed 
+by a period of much more intense activity (perhaps going to work or going for a 
+run?), followed by a quick decline into slower activity throughout the afternoon 
+and early evening and finally dropping back down to little or no activity at 
+night.
+
+We can also see that the maximum average steps-per-interval appears to 
 be located at an interval somewhere in the mid-800s.  We can look at the data a 
 little more closely to determine the exact interval where the average steps is 
 highest:
@@ -507,7 +519,7 @@ We sorted the data in descending order by steps, with the maximum steps at the
 top.  As we saw in the above plot, the highest average numbers of steps are all 
 situated in the mid-800 interval range, with interval 835 being 
 the maximum.
-<br>
+<br><br>
 
 ## Inputting missing values
 
@@ -785,6 +797,7 @@ summary(meanMedianSteps_complete)
 ##  3rd Qu.:2012-11-15   3rd Qu.:44.4826   3rd Qu.: 0.000  
 ##  Max.   :2012-11-30   Max.   :73.5903   Max.   :34.113
 ```
+<br>
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -821,7 +834,7 @@ averageSteps_weekday <- completeData_weekday %>% group_by(weekday, interval) %>%
 ggplot(averageSteps_weekday, aes(interval, steps)) +
     facet_grid(.~weekday) +
     geom_line(size=0.3) +
-    ggtitle("Total Steps Over 5 Second Intervals:  Weekday vs. Weekend") +
+    ggtitle("Average Steps Over 5 Second Intervals:  Weekday vs. Weekend") +
     labs(x="5 Second Intervals of Day") +
     labs(y="Steps")
 ```
@@ -829,18 +842,44 @@ ggplot(averageSteps_weekday, aes(interval, steps)) +
 ![](PA1_template_files/figure-html/weekdayPlot-1.png) 
 
 It is clear that there are differences in activity levels between weekdays and 
-weekends, particularly in the mornings and afternoons.
+weekends, particularly in the mornings and afternoons.  On weekdays, there is a 
+large spike of activity in the morning, and it wanes considerably into the 
+afternoon.  This shift is much more gradual on the weekends, and with less 
+activity in the morning and more in the afternoon than on weekdays.  Conversely, 
+there is less variation in the early-morning and night periods of the data, 
+which might be consistent with someone who gets regular sleep.
 
+<br>
 
 ## Conclusions
 
-* Time of day and day of the week both affect the level of activity of the 
+In this analysis, we explored some of the relationships between the amount of 
+steps that our subject took and the time of day/time of week/etc, using simple 
+data transformation and plotting techniques.  We were able to draw a few 
+conclusions about these relationships, but were also set back by the presence of 
+`NA` values in the "steps" variable:
+
+* Time of the day and day of the week both affect the level of activity of the 
 subject.
+
+* We were able to propose some possibilities about the activity levels of the 
+subject, though these suggestions would require further analysis and additional 
+data to explore much further.
 
 * NAs affected the totals of data and their relationship to one another.  The 
 work-around here was only partially effective - a full set of data would be a 
 better alternative.
 
+* If a complete set of data is not available, how can we improve the accuracy of 
+the `NA`-replacement strategy?
+<br><br>
+
 ## Citations
 
-This assignment comes from Coursera.org.  Used with permission.
+This assignment comes from the course <u>Reproducible Research</u>, offered by 
+Johns Hopkins University as part of the Coursera *Data Science Specialization*. 
+For more information, please visit [Coursera.org](https://www.coursera.org/). 
+Used with permission.
+<br><br><br>
+*Authored by Julia Phelps, December 2012*
+<br><br><br>
